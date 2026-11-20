@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEREIN – Focus &amp; Reflection</title>
+  <meta name="description" content="SEREIN is a considered space to set your daily focus and reflect on your day, answered by a serverless AWS backend." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand">SEREIN</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#reflect">Reflect</a>
+        <a href="#response">Response</a>
+        <a href="#process">Process</a>
+        <a href="#architecture">Architecture</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <p class="eyebrow">Daily Focus &amp; Reflection</p>
+        <h1>Work with intention. <em>Reflect</em> with honesty.</h1>
+        <p class="hero-lead">
+          SEREIN is a considered space for the two habits that shape a productive day:
+          deciding what matters before it begins, and reviewing what happened once it ends.
+          Write a few lines and a serverless cloud function answers within moments.
+        </p>
+        <div class="hero-actions">
+          <a href="#reflect" class="btn btn-primary">Begin today's entry</a>
+          <a href="#architecture" class="btn btn-ghost">See how it works</a>
+        </div>
+
+        <ul class="hero-stats" aria-label="Key figures">
+          <li><span class="stat-number">2</span><span class="stat-label">Daily habits supported</span></li>
+          <li><span class="stat-number">1</span><span class="stat-label">POST route, one purpose</span></li>
+          <li><span class="stat-number">0</span><span class="stat-label">Servers to maintain</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== PRINCIPLES ===== -->
+    <section class="principles">
+      <div class="container">
+        <p class="eyebrow">Our approach</p>
+        <h2>Three principles behind every entry</h2>
+        <p class="section-lead">
+          Good days are rarely accidental. SEREIN keeps the practice deliberately small, so it is easy
+          to return to every morning and every evening.
+        </p>
+
+        <div class="card-grid">
+          <article class="card">
+            <span class="card-number">01</span>
+            <h3>Set one clear focus</h3>
+            <p>Name the single outcome that would make today worthwhile. A narrow intention protects your attention from everything competing for it.</p>
+          </article>
+          <article class="card">
+            <span class="card-number">02</span>
+            <h3>Reflect without judgement</h3>
+            <p>Record what worked, what resisted you, and what you noticed. Honest observation is more useful than a harsh verdict.</p>
+          </article>
+          <article class="card">
+            <span class="card-number">03</span>
+            <h3>Receive a considered reply</h3>
+            <p>Your entry is sent to an AWS Lambda function, which reads it and returns a short, relevant response along with a few facts about your entry.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== EDITORIAL QUOTE ===== -->
+    <section class="quote-band">
+      <div class="container narrow">
+        <blockquote>
+          <p>A day without an intention is a day decided by other people's urgencies.</p>
+          <footer>The SEREIN principle</footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ===== REFLECTION INPUT ===== -->
+    <section class="reflect" id="reflect">
+      <div class="container reflect-grid">
+
+        <div class="reflect-main">
+          <p class="eyebrow">Today's entry</p>
+          <h2>What deserves your attention?</h2>
+          <p class="section-lead">
+            Write your focus for the day ahead, or a reflection on the day just passed.
+            A few honest sentences are enough.
+          </p>
+
+          <form id="reflection-form" novalidate>
+            <label for="reflection-input" class="field-label">Your focus or reflection</label>
+            <textarea
+              id="reflection-input"
+              name="reflection"
+              rows="8"
+              maxlength="1000"
+              placeholder="Today, I want to focus on..."
+            ></textarea>
+
+            <div class="form-footer">
+              <span class="char-count"><span id="char-count">0</span> / 1000 characters</span>
+              <button type="submit" id="submit-btn" class="btn btn-primary">Submit reflection</button>
+            </div>
+
+            <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <aside class="reflect-side" aria-label="Writing prompts">
+          <h3>Need a starting point?</h3>
+          <p class="side-note">Select a prompt to place it in the writing area, then continue in your own words.</p>
+          <div class="chip-list">
+            <button type="button" class="chip" data-prompt="Today, I want to focus on ">Set a focus for today</button>
+            <button type="button" class="chip" data-prompt="Today I learned that ">Record something I learned</button>
+            <button type="button" class="chip" data-prompt="I noticed that I felt ">Notice how I felt</button>
+            <button type="button" class="chip" data-prompt="Something that went well today was ">Name what went well</button>
+            <button type="button" class="chip" data-prompt="My main goal this week is ">Define my weekly goal</button>
+          </div>
+
+          <div class="side-tip">
+            <span class="tip-label">Writing tip</span>
+            <p>Specific beats general. "Finish the API integration" is more useful than "be productive".</p>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ===== RESPONSE ===== -->
+    <section class="response" id="response">
+      <div class="container narrow">
+        <p class="eyebrow">From the cloud</p>
+        <h2>Your response</h2>
+        <p class="section-lead">
+          The reply below is generated by the Lambda function when you submit an entry.
+        </p>
+
+        <div id="response-box" class="response-box">
+          <p class="response-placeholder">
+            Your response will appear here once you submit an entry.
+          </p>
+        </div>
+
+        <div class="privacy-note">
+          <span class="tip-label">A note on privacy</span>
+          <p>
+            This version processes your text only to produce the reply. It does not save entries
+            to a database, and nothing is stored in your browser.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROCESS ===== -->
+    <section class="process" id="process">
+      <div class="container">
+        <p class="eyebrow">How it works</p>
+        <h2>From your words to a response in four steps</h2>
+
+        <ol class="steps">
+          <li>
+            <span class="step-index">1</span>
+            <h3>You write</h3>
+            <p>Your entry is checked in the browser. An empty entry is stopped before anything is sent.</p>
+          </li>
+          <li>
+            <span class="step-index">2</span>
+            <h3>The browser sends</h3>
+            <p>JavaScript sends your text as JSON, using a POST request, to a public Amazon API Gateway endpoint.</p>
+          </li>
+          <li>
+            <span class="step-index">3</span>
+            <h3>Lambda processes</h3>
+            <p>A Python function validates the input, counts the words, identifies the type of entry and prepares a reply.</p>
+          </li>
+          <li>
+            <span class="step-index">4</span>
+            <h3>The response returns</h3>
+            <p>A JSON response travels back through the gateway and is displayed on this page.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ARCHITECTURE ===== -->
+    <section class="architecture" id="architecture">
+      <div class="container">
+        <p class="eyebrow">Under the hood</p>
+        <h2>A serverless architecture, end to end</h2>
+        <p class="section-lead">
+          There are no servers to provision, patch or keep running. Code executes only when a request arrives,
+          and AWS handles the scaling.
+        </p>
+
+        <div class="arch-flow">
+          <div class="arch-step">
+            <span class="arch-label">Browser</span>
+            <p>HTML, CSS and JavaScript served from GitHub Pages.</p>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-step">
+            <span class="arch-label">API Gateway</span>
+            <p>An HTTP API that receives the POST request and applies CORS rules.</p>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-step">
+            <span class="arch-label">AWS Lambda</span>
+            <p>A Python function that processes the entry and builds the reply.</p>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-step">
+            <span class="arch-label">JSON reply</span>
+            <p>The result returns along the same path to your screen.</p>
+          </div>
+        </div>
+
+        <div class="stack-grid">
+          <div class="stack-item">
+            <span class="stack-title">Frontend</span>
+            <span class="stack-detail">HTML5 · CSS3 · JavaScript</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-title">Compute</span>
+            <span class="stack-detail">Python on AWS Lambda</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-title">Interface</span>
+            <span class="stack-detail">API Gateway · HTTP API</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-title">Hosting</span>
+            <span class="stack-detail">GitHub Pages</span>
+          </div>
+        </div>
+
+        <div class="code-grid">
+          <div class="code-card">
+            <span class="code-title">Request body (example shape)</span>
+<pre><code>{
+  "reflection": "Today, I want to focus
+  on finishing my project."
+}</code></pre>
+          </div>
+          <div class="code-card">
+            <span class="code-title">Response body (example shape)</span>
+<pre><code>{
+  "message": "...",
+  "entryType": "Focus",
+  "wordCount": 10,
+  "receivedAt": "2026-11-20T..."
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <span class="brand brand-small">SEREIN</span>
+        <p class="footer-tagline">A considered space for daily focus and reflection.</p>
+      </div>
+      <div>
+        <span class="footer-heading">Navigate</span>
+        <ul class="footer-links">
+          <li><a href="#reflect">Reflect</a></li>
+          <li><a href="#response">Response</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="footer-heading">Built with</span>
+        <ul class="footer-links">
+          <li>HTML · CSS · JavaScript</li>
+          <li>Python on AWS Lambda</li>
+          <li>Amazon API Gateway</li>
+          <li>GitHub Pages</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>Developed as part of the AWS Lambda &amp; Serverless internship module.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+
+  <!-- Prompt chips: fill the text box when clicked -->
+  <script>
+    (function () {
+      var box = document.getElementById("reflection-input");
+      var chips = document.querySelectorAll(".chip");
+      chips.forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          box.value = chip.getAttribute("data-prompt");
+          box.dispatchEvent(new Event("input"));
+          box.focus();
+          box.setSelectionRange(box.value.length, box.value.length);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
