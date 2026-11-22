@@ -1,8 +1,5 @@
-// ===== SEREIN – script.js =====
 
-// STEP LATER: replace the text below with your API Gateway URL
-// Example: "https://abc123xyz.execute-api.ap-south-1.amazonaws.com/reflect"
-const API_URL = "PASTE_YOUR_API_GATEWAY_URL_HERE";
+// SEREIN – Browser-based reflection system
 
 const form = document.getElementById("reflection-form");
 const input = document.getElementById("reflection-input");
@@ -11,109 +8,96 @@ const submitBtn = document.getElementById("submit-btn");
 const formMessage = document.getElementById("form-message");
 const responseBox = document.getElementById("response-box");
 
-// Live character counter
 input.addEventListener("input", () => {
   charCount.textContent = input.value.length;
   formMessage.textContent = "";
 });
 
-// Helper: show text safely in the response box
-function showResponseText(className, text) {
-  responseBox.innerHTML = "";
-  const p = document.createElement("p");
-  p.className = className;
-  p.textContent = text;
-  responseBox.appendChild(p);
+function classifyEntry(text) {
+  const lowered = text.toLowerCase();
+
+  const reflectionWords = [
+    "today i", "yesterday", "i felt", "i learned",
+    "i noticed", "went well", "i realised", "i realized"
+  ];
+
+  const focusWords = [
+    "i want to", "i will", "my focus", "i plan",
+    "i need to", "goal", "today, i"
+  ];
+
+  if (reflectionWords.some(word => lowered.includes(word))) {
+    return "Reflection";
+  }
+
+  if (focusWords.some(word => lowered.includes(word))) {
+    return "Focus";
+  }
+
+  return "Note";
 }
 
-function showSuccess(data) {
-  responseBox.innerHTML = "";
-
-  const message = document.createElement("p");
-  message.className = "response-message";
-  message.textContent = data.message || "Response received.";
-  responseBox.appendChild(message);
-
-  const meta = document.createElement("div");
-  meta.className = "response-meta";
-
-  const tags = [];
-  if (data.entryType) tags.push("Type: " + data.entryType);
-  if (typeof data.wordCount === "number") tags.push("Words: " + data.wordCount);
-  if (data.receivedAt) tags.push("Processed: " + new Date(data.receivedAt).toLocaleString());
-
-  tags.forEach((text) => {
-    const tag = document.createElement("span");
-    tag.className = "meta-tag";
-    tag.textContent = text;
-    meta.appendChild(tag);
-  });
-
-  if (tags.length > 0) responseBox.appendChild(meta);
-}
-
-form.addEventListener("submit", async (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
-  formMessage.textContent = "";
 
   const text = input.value.trim();
 
-  // 1. Handle empty input
-  if (text === "") {
+  if (!text) {
     formMessage.textContent = "Please write something before submitting.";
     input.focus();
     return;
   }
 
-  // 2. Check API is configured
-  if (API_URL === "PASTE_YOUR_API_GATEWAY_URL_HERE") {
-    showResponseText(
-      "response-error",
-      "The API is not connected yet. Add your API Gateway URL to script.js after completing the AWS setup."
-    );
-    document.getElementById("response").scrollIntoView({ behavior: "smooth" });
+  if (text.length > 1000) {
+    formMessage.textContent = "Please keep your entry under 1000 characters.";
     return;
   }
 
-  // 3. Loading state
   submitBtn.disabled = true;
-  submitBtn.textContent = "Sending...";
-  showResponseText("response-loading", "Waiting for your response from the cloud...");
-  document.getElementById("response").scrollIntoView({ behavior: "smooth" });
+  submitBtn.textContent = "Processing...";
 
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reflection: text }),
-    });
+  const entryType = classifyEntry(text);
+  const wordCount = text.split(/\s+/).length;
 
-    let data = null;
-    try {
-      data = await res.json();
-    } catch (parseError) {
-      data = null;
-    }
+  let message;
 
-    if (!res.ok) {
-      const serverMessage = data && data.error ? data.error : "The server returned status " + res.status + ".";
-      throw new Error(serverMessage);
-    }
-
-    if (!data) {
-      throw new Error("The server returned an unreadable response.");
-    }
-
-    // 4. Show real response from Lambda
-    showSuccess(data);
-  } catch (error) {
-    console.error("SEREIN request failed:", error);
-    showResponseText(
-      "response-error",
-      "Something went wrong: " + error.message + " Please try again."
-    );
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Submit reflection";
+  if (entryType === "Focus") {
+    message = "A clear intention is already half the work. Protect the first hour of your day for it.";
+  } else if (entryType === "Reflection") {
+    message = "Noticing what happened is how progress becomes lasting. Carry one lesson into tomorrow.";
+  } else {
+    message = "Thank you for putting your thoughts into words. Name one small action to take next.";
   }
+
+  responseBox.innerHTML = "";
+
+  const paragraph = document.createElement("p");
+  paragraph.className = "response-message";
+  paragraph.textContent = message;
+  responseBox.appendChild(paragraph);
+
+  const meta = document.createElement("div");
+  meta.className = "response-meta";
+
+  const details = [
+    "Type: " + entryType,
+    "Words: " + wordCount,
+    "Processed: " + new Date().toLocaleString()
+  ];
+
+  details.forEach(detail => {
+    const tag = document.createElement("span");
+    tag.className = "meta-tag";
+    tag.textContent = detail;
+    meta.appendChild(tag);
+  });
+
+  responseBox.appendChild(meta);
+
+  document.getElementById("response").scrollIntoView({
+    behavior: "smooth"
+  });
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Submit reflection";
 });
